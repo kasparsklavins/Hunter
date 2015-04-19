@@ -59,7 +59,7 @@ class Hunter
      *
      * @param int    $id
      * @param string $type accepted values are "id" and "num".
-     * @return \stdClass
+     * @return array
      */
     public function problem($id, $type = "id")
     {

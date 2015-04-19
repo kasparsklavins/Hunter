@@ -4,6 +4,11 @@ namespace Hunter\Helper;
 
 use Hunter\Status;
 
+/**
+ * @param array $problem
+ * @param bool  $associated
+ * @return array
+ */
 function formatProblem($problem, $associated = true)
 {
     if ($associated === false) {
@@ -13,7 +18,7 @@ function formatProblem($problem, $associated = true)
         ), $problem);
     }
 
-    return (object)array(
+    return array(
         "id"          => $problem["pid"],
         "number"      => $problem["num"],
         "title"       => $problem["title"],
@@ -39,9 +44,13 @@ function formatProblem($problem, $associated = true)
     );
 }
 
+/**
+ * @param array $submission
+ * @return array
+ */
 function formatSubmission($submission)
 {
-    return (object)array(
+    return array(
         "id"       => $submission["sid"],
         "user"     => $submission["uid"],
         "name"     => $submission["name"],
@@ -55,6 +64,13 @@ function formatSubmission($submission)
     );
 }
 
+/**
+ * @param array  $submission
+ * @param int    $user
+ * @param string $name
+ * @param string $username
+ * @return array
+ */
 function formatUserSubmission($submission, $user, $name, $username)
 {
     return formatSubmission(array(
@@ -71,10 +87,14 @@ function formatUserSubmission($submission, $user, $name, $username)
     ));
 }
 
+/**
+ * @param array $user
+ * @return array
+ */
 function formatRanklist($user)
 {
-    return (object)array(
-        "id"        => $user["userid"],
+    return array(
+        "id"          => $user["userid"],
         "name"        => $user["name"],
         "username"    => ($user["username"] === "--- ? ---") ? null : $user["username"],
         "rank"        => $user["rank"],

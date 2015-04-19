@@ -3,7 +3,6 @@ Hunter is an easy to use [uHunt](http://uhunt.felix-halim.net/api) wrapper to re
 
 Hunter is licensed under the MIT License - see the LICENSE file for details.
 
----
 #Basic Usage
 ```PHP
 use Hunter\Hunter;
@@ -14,7 +13,6 @@ $hunter = new Hunter();
 
 echo $hunter->getIdFromUsername("Kaspars");
 ```
----
 #Installing
 ##With Composer
 The easiest and recommended method to install Hunter is via composer.
@@ -34,9 +32,8 @@ If you wish you can create the following composer.json file and run composer ins
 ##Direct Download
 First of all, you really should use composer.. But if you insist, then just copy the content from `src` folder into your project
 
----
 #Data Format
-All data is returned as an instance of `stdClass`.
+All data is returned as an associated array.
 ##Problem format
 * `id` Problem ID
 * `number` Problem number
@@ -103,7 +100,6 @@ All data is returned as an instance of `stdClass`.
     * `Hunter\Activity::QUARTER` Activity in the last 3 months
     * `Hunter\Activity::YEAR` Activity in the last year
 
----
 #API
 ##getIdFromUsername(string $username)
 Convert the given `$username` to a UVa ID.
@@ -115,70 +111,75 @@ echo $hunter->getIdFromUsername("Kaspars"); //343417
 echo $hunter->getIdFromUsername("Foobar"); // null
 ```
 #problems(void)
-Returns ann array of available UVa problems. 
+Returns ann array of available UVa problems
 ```PHP
 $hunter = new Hunter\Hunter();
 var_dump($hunter->problems());
 ```
-#problem(int, string)
-View a specific problem.
+#problem(int $id, string $type = "id")
+Retrieved data of a specific problem
 ```PHP
 $hunter = new Hunter\Hunter();
 var_dump($hunter->problem(36));
 var_dump($hunter->problem(100, "num"));
 ```
-#problemSubmissions(array, int, int)
+#problemSubmissions(array|int $problemIDS, int $start = 0, int $end = 2^31)
 View submissions to specific problems on a given submission date range.
+`$start` and `$end` are unix timestamps
 ```PHP
 $hunter = new Hunter\Hunter();
 var_dump($hunter->problemSubmissions(36));
 var_dump($hunter->problemSubmissions(array(36,37)));
 ```
-#problemRanklist(int, int, int)
+#problemRanklist(int $problemID, int $rank = 1, int $count = 100)
 Returns submissions to a problem ranked from $rank to $rank + $count - 1.
 ```PHP
 $hunter = new Hunter\Hunter();
 var_dump($hunter->problemRanklist(36));
 ```
-#userProblemRanklist(int, int, int, int)
+#userProblemRanklist(int $problemID, int $userID, int $above = 10, int $below = 10)
 Returns nearby submissions (by runtime) for a particular user submission to a problem.
 ```PHP
 $hunter = new Hunter\Hunter();
 var_dump($hunter->userProblemRanklist(36, 343417));
 ```
-#userSubmissions(int, int)
+#userSubmissions(int $userID, int $min = null)
 Returns all of the submissions of a particular user.
+
+if `$min` is specified, only submissions with ID larger than `$min` will be returned. 
 ```PHP
 $hunter = new Hunter\Hunter();
 var_dump($hunter->userSubmissions(343417));
 ```
-#userLatestSubmissions(int, int)
+#userLatestSubmissions(int $userID, int $count = 10)
 Returns the last $count submissions of a particular user.
 ```PHP
 $hunter = new Hunter\Hunter();
 var_dump($hunter->userLatestSubmissions(343417));
 ```
-#userProblemSubmissions(array, array, int, string)
+#userProblemSubmissions(array|int $userIDs, array|int $problemIDs, int $min, string $type = "id")
 Returns all the submissions of the users on specific problems.
+
+Possible `$type` values are _id_ and _num_. This changes whether you pass problem id's or problem num's as the second argument.
 ```PHP
 $hunter = new Hunter\Hunter();
-var_dump($hunter->userProblemSubmissions(343417, 36));
+var_dump($hunter->userProblemSubmissions(343417, 36);
 ```
-#userSolvedProblems(array)
+#userSolvedProblems(array|int $userIDs)
 Get The Bit-Encoded-Problem IDs that Has Been Solved by Some Authors.
 ```PHP
 $hunter = new Hunter\Hunter();
 var_dump($hunter->userSolvedProblems(343417));
 ```
-#userRanklist(int, int, int)
-Returns the user's ranklist and their neighbors.
+#userRanklist(int $userID, int $above = 10, int $below = 10)
+Returns the user's ranklist and their closest neighbors.
 ```PHP
 $hunter = new Hunter\Hunter();
-var_dump($hunter->userRanklist(343417));
+var_dump($hunter->userRanklist(343417, 10, 10));
 ```
-#ranklist(int, int)
-Global ranklist.
+#ranklist(int $rank = 1, int $count = 10)
+Global ranklist, starteing from `$rank` to `$rank+$count`
 ```PHP
 $hunter = new Hunter\Hunter();
-var_dump($hunter->ranklist());
+var_dump($hunter->ranklist(1, 100));
 ```
