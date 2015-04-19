@@ -44,14 +44,14 @@ function formatSubmission($submission)
     return (object)array(
         "id"       => $submission["sid"],
         "user"     => $submission["uid"],
+        "name"     => $submission["name"],
+        "username" => ($submission["uname"] === "--- ? ---") ? null : $submission["uname"],
         "problem"  => $submission["pid"],
         "verdict"  => $submission["ver"],
         "language" => $submission["lan"],
         "runtime"  => $submission["run"],
         "rank"     => $submission["rank"],
         "time"     => $submission["sbt"],
-        "name"     => $submission["name"],
-        "username" => ($submission["uname"] === "--- ? ---") ? null : $submission["uname"],
     );
 }
 
@@ -60,20 +60,21 @@ function formatUserSubmission($submission, $user, $name, $username)
     return formatSubmission(array(
         "sid"   => $submission[0],
         "uid"   => $user,
+        "name"  => $name,
+        "uname" => $username,
         "pid"   => $submission[1],
         "ver"   => $submission[2],
         "lan"   => $submission[5],
         "run"   => $submission[3],
         "rank"  => $submission[6],
         "sbt"   => $submission[4],
-        "name"  => $name,
-        "uname" => $username,
     ));
 }
 
 function formatRanklist($user)
 {
     return (object)array(
+        "id"        => $user["userid"],
         "name"        => $user["name"],
         "username"    => ($user["username"] === "--- ? ---") ? null : $user["username"],
         "rank"        => $user["rank"],

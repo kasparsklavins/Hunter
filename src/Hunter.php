@@ -31,7 +31,9 @@ class Hunter
      */
     public function getIdFromUsername($username)
     {
-        return $this->load("uname2uid", $username);
+        $id = $this->load("uname2uid", $username);
+
+        return ($id === 0) ? null : $id;
     }
 
 
