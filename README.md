@@ -1,5 +1,5 @@
 #Introduction
-Hunter is an easy to use [uHunt](http://uhunt.felix-halim.net/api) wrapper to receive information from UVA servers.
+Hunter is an easy to use [uHunt](http://uhunt.felix-halim.net/api) wrapper to receive information from [UVa's online judge](http://uva.onlinejudge.org/).
 
 Hunter is licensed under the MIT License - see the LICENSE file for details.
 
