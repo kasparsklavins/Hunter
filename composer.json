@@ -1,6 +1,13 @@
 {
     "name": "kaspars/hunter",
+    "type": "library",
     "description": "Hunter is an easy to use uHunt wrapper to receive information from UVA servers.",
+    "keywords": [
+        "uva",
+        "uhunt",
+        "onlinejudge"
+    ],
+    "homepage": "https://github.com/kasparsklavins/Hunter",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +15,6 @@
             "email": "klavins21@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.0"
     },
