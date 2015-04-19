@@ -9,7 +9,7 @@ class Hunter
      *
      * @var string
      */
-    public $location = "http://uhunt.felix-halim.net/api/";
+    private $location = "http://uhunt.felix-halim.net/api/";
 
     /**
      * Create a new instance
@@ -34,31 +34,6 @@ class Hunter
         return $this->load("uname2uid", $username);
     }
 
-    /**
-     * Reads & decodes data from the specified node.
-     *
-     * @param string    $node
-     * @param array|int $arguments
-     * @return mixed
-     */
-    private function load($node, $arguments = array())
-    {
-        if (is_array($arguments) === false) {
-            $arguments = array($arguments);
-        }
-        if (empty($arguments)) {
-            $response = file_get_contents($this->location . $node);
-        } else {
-            foreach ($arguments as &$argument) {
-                if (is_array($argument)) {
-                    $argument = implode(",", $argument);
-                }
-            }
-            $response = file_get_contents($this->location . $node . "/" . implode("/", $arguments));
-        }
-
-        return json_decode($response, true);
-    }
 
     /**
      * Returns the list of problems at UVa.
@@ -68,35 +43,10 @@ class Hunter
     public function problems()
     {
         $rawProblems = $this->load("p");
-        $keys = array(
-            "pid",
-            "num",
-            "title",
-            "dacu",
-            "mrun",
-            "mmem",
-            "nover",
-            "sube",
-            "noj",
-            "inq",
-            "ce",
-            "rf",
-            "re",
-            "ole",
-            "tle",
-            "mle",
-            "wa",
-            "pe",
-            "ac",
-            "rtl",
-            "status"
-        );
-
         $problems = array();
 
         foreach ($rawProblems as $problem) {
-            $problem = array_combine($keys, $problem);
-            $problems[] = Formatter::problem($problem);
+            $problems[] = Helper\formatProblem($problem, false);
         }
 
         return $problems;
@@ -112,8 +62,7 @@ class Hunter
     public function problem($id, $type = "id")
     {
         $problem = $this->load("p", array($type, $id));
-
-        return Formatter::problem($problem);
+        return Helper\formatProblem($problem);
     }
 
     /**
@@ -134,7 +83,7 @@ class Hunter
         $submissions = array();
 
         foreach ($rawSubmissions as $submission) {
-            $submissions[] = Formatter::submission($submission);
+            $submissions[] = Helper\formatSubmission($submission);
         }
 
         return $submissions;
@@ -154,7 +103,7 @@ class Hunter
         $submissions = array();
 
         foreach ($rawSubmissions as $submission) {
-            $submissions[] = Formatter::submission($submission);
+            $submissions[] = Helper\formatSubmission($submission);
         }
 
         return $submissions;
@@ -175,7 +124,7 @@ class Hunter
         $submissions = array();
 
         foreach ($rawSubmissions as $submission) {
-            $submissions[] = Formatter::submission($submission);
+            $submissions[] = Helper\formatSubmission($submission);
         }
 
         return $submissions;
@@ -199,7 +148,7 @@ class Hunter
         $submissions = array();
 
         foreach ($rawSubmissions["subs"] as $submission) {
-            $submissions[] = Formatter::userSubmission(
+            $submissions[] = Helper\formatUserSubmission(
                 $submission,
                 $user,
                 $rawSubmissions["name"],
@@ -224,7 +173,7 @@ class Hunter
         $submissions = array();
 
         foreach ($rawSubmissions["subs"] as $submission) {
-            $submissions[] = Formatter::userSubmission(
+            $submissions[] = Helper\formatUserSubmission(
                 $submission,
                 $user,
                 $rawSubmissions["name"],
@@ -262,7 +211,7 @@ class Hunter
 
         foreach ($rawSubmissions as $id => $user) {
             foreach ($user["subs"] as $submission) {
-                $users[$id][] = Formatter::userSubmission(
+                $users[$id][] = Helper\formatUserSubmission(
                     $submission,
                     $id,
                     $user["name"],
@@ -309,7 +258,7 @@ class Hunter
         $users = array();
 
         foreach ($rawUsers as $user) {
-            $users[] = Formatter::ranklist($user);
+            $users[] = Helper\formatRanklist($user);
         }
 
         return $users;
@@ -328,9 +277,35 @@ class Hunter
         $users = array();
 
         foreach ($rawUsers as $user) {
-            $users[] = Formatter::ranklist($user);
+            $users[] = Helper\formatRanklist($user);
         }
 
         return $users;
+    }
+
+    /**
+     * Reads & decodes data from the specified node.
+     *
+     * @param string    $node
+     * @param array|int $arguments
+     * @return mixed
+     */
+    private function load($node, $arguments = array())
+    {
+        if (is_array($arguments) === false) {
+            $arguments = array($arguments);
+        }
+        if (empty($arguments)) {
+            $response = file_get_contents($this->location . $node);
+        } else {
+            foreach ($arguments as &$argument) {
+                if (is_array($argument)) {
+                    $argument = implode(",", $argument);
+                }
+            }
+            $response = file_get_contents($this->location . $node . "/" . implode("/", $arguments));
+        }
+
+        return json_decode($response, true);
     }
 }

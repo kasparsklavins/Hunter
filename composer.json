@@ -19,6 +19,9 @@
         "php": ">=5.3.0"
     },
     "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
         "psr-4": {
           "Hunter\\": "src/"
         }
