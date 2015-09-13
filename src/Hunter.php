@@ -5,37 +5,48 @@ namespace Hunter;
 class Hunter
 {
     /**
-     * Location of the API data
+     * Source of the API data
      *
      * @var string
      */
-    private $location = "http://uhunt.felix-halim.net/api/";
+    private $source = 'http://uhunt.felix-halim.net/api/';
 
     /**
-     * Create a new instance
+     * Sets the source of API data
      *
-     * @param string $location
+     * @param string $source
      */
-    public function __construct($location = null)
+    public function setSource($source)
     {
-        if (is_null($location) === false) {
-            $this->location = $location;
+        if (substr($source, -1) != '/') {
+            $source .= '/';
         }
+        $this->source = $source;
+    }
+
+    /**
+     * Returns the source of API data
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 
     /**
      * Service will return the user ID of given username.
      *
      * @param string $username
+     *
      * @return int
      */
     public function getIdFromUsername($username)
     {
-        $id = $this->load("uname2uid", $username);
+        $id = $this->load('uname2uid', $username);
 
-        return ($id === 0) ? null : $id;
+        return ($id === 0) ? null : (int)$id;
     }
-
 
     /**
      * Returns the list of problems at UVa.
@@ -44,7 +55,7 @@ class Hunter
      */
     public function problems()
     {
-        $rawProblems = $this->load("p");
+        $rawProblems = $this->load('p');
         $problems = array();
 
         foreach ($rawProblems as $problem) {
@@ -58,12 +69,14 @@ class Hunter
      * View a specific problem.
      *
      * @param int    $id
-     * @param string $type accepted values are "id" and "num".
+     * @param string $type accepted values are 'id' and 'num'.
+     *
      * @return array
      */
-    public function problem($id, $type = "id")
+    public function problem($id, $type = 'id')
     {
-        $problem = $this->load("p", array($type, $id));
+        $problem = $this->load('p', array($type, $id));
+
         return Helper\formatProblem($problem);
     }
 
@@ -73,6 +86,7 @@ class Hunter
      * @param array|int $problems
      * @param int       $start Unix timestamp.
      * @param int       $end   Unix timestamp.
+     *
      * @return array
      */
     public function problemSubmissions($problems, $start = 0, $end = 2147483648)
@@ -81,7 +95,7 @@ class Hunter
             $problems = array($problems);
         }
 
-        $rawSubmissions = $this->load("p/subs", array($problems, $start, $end));
+        $rawSubmissions = $this->load('p/subs', array($problems, $start, $end));
         $submissions = array();
 
         foreach ($rawSubmissions as $submission) {
@@ -97,18 +111,14 @@ class Hunter
      * @param int $problem
      * @param int $rank
      * @param int $count
+     *
      * @return array
      */
     public function problemRanklist($problem, $rank = 1, $count = 100)
     {
-        $rawSubmissions = $this->load("p/rank", array($problem, $rank, $count));
-        $submissions = array();
+        $rawSubmissions = $this->load('p/rank', array($problem, $rank, $count));
 
-        foreach ($rawSubmissions as $submission) {
-            $submissions[] = Helper\formatSubmission($submission);
-        }
-
-        return $submissions;
+        return Helper\formatSubmissions($rawSubmissions);
     }
 
     /**
@@ -118,11 +128,12 @@ class Hunter
      * @param int $user
      * @param int $above
      * @param int $below
+     *
      * @return array
      */
     public function userProblemRanklist($problem, $user, $above = 10, $below = 10)
     {
-        $rawSubmissions = $this->load("p/ranklist", array($problem, $user, $above, $below));
+        $rawSubmissions = $this->load('p/ranklist', array($problem, $user, $above, $below));
         $submissions = array();
 
         foreach ($rawSubmissions as $submission) {
@@ -137,24 +148,25 @@ class Hunter
      *
      * @param int $user
      * @param int $min
+     *
      * @return array
      */
     public function userSubmissions($user, $min = null)
     {
         if (is_null($min)) {
-            $rawSubmissions = $this->load("subs-user", $user);
+            $rawSubmissions = $this->load('subs-user', $user);
         } else {
-            $rawSubmissions = $this->load("subs-user", array($user, $min));
+            $rawSubmissions = $this->load('subs-user', array($user, $min));
         }
 
         $submissions = array();
 
-        foreach ($rawSubmissions["subs"] as $submission) {
+        foreach ($rawSubmissions['subs'] as $submission) {
             $submissions[] = Helper\formatUserSubmission(
                 $submission,
                 $user,
-                $rawSubmissions["name"],
-                $rawSubmissions["name"]
+                $rawSubmissions['name'],
+                $rawSubmissions['name']
             );
         }
 
@@ -166,20 +178,21 @@ class Hunter
      *
      * @param int $user
      * @param int $count
+     *
      * @return array
      */
     public function userLatestSubmissions($user, $count = 10)
     {
-        $rawSubmissions = $this->load("subs-user-last", array($user, $count));
+        $rawSubmissions = $this->load('subs-user-last', array($user, $count));
 
         $submissions = array();
 
-        foreach ($rawSubmissions["subs"] as $submission) {
+        foreach ($rawSubmissions['subs'] as $submission) {
             $submissions[] = Helper\formatUserSubmission(
                 $submission,
                 $user,
-                $rawSubmissions["name"],
-                $rawSubmissions["uname"]
+                $rawSubmissions['name'],
+                $rawSubmissions['uname']
             );
         }
 
@@ -193,9 +206,10 @@ class Hunter
      * @param array|int $problems
      * @param int       $min
      * @param string    $type
+     *
      * @return array
      */
-    public function userProblemSubmissions($users, $problems, $min = 0, $type = "id")
+    public function userProblemSubmissions($users, $problems, $min = 0, $type = 'id')
     {
         if (is_array($users) === false) {
             $users = array($users);
@@ -204,20 +218,20 @@ class Hunter
             $problems = array($problems);
         }
 
-        if ($type === "id") {
-            $rawSubmissions = $this->load("subs-pids", array($users, $problems, $min));
+        if ($type === 'id') {
+            $rawSubmissions = $this->load('subs-pids', array($users, $problems, $min));
         } else {
-            $rawSubmissions = $this->load("subs-nums", array($users, $problems, $min));
+            $rawSubmissions = $this->load('subs-nums', array($users, $problems, $min));
         }
         $users = array();
 
         foreach ($rawSubmissions as $id => $user) {
-            foreach ($user["subs"] as $submission) {
+            foreach ($user['subs'] as $submission) {
                 $users[$id][] = Helper\formatUserSubmission(
                     $submission,
                     $id,
-                    $user["name"],
-                    $user["uname"]
+                    $user['name'],
+                    $user['uname']
                 );
             }
         }
@@ -229,6 +243,7 @@ class Hunter
      * Get The Bit-Encoded-Problem IDs that Has Been Solved by Some Authors.
      *
      * @param array|int $users
+     *
      * @return array
      */
     public function userSolvedProblems($users)
@@ -236,11 +251,11 @@ class Hunter
         if (is_array($users) === false) {
             $users = array($users);
         }
-        $rawSolved = $this->load("solved-bits", array($users));
+        $rawSolved = $this->load('solved-bits', array($users));
         $users = array();
 
         foreach ($rawSolved as $user) {
-            $users[$user["uid"]] = $user["solved"];
+            $users[$user['uid']] = $user['solved'];
         }
 
         return $users;
@@ -252,11 +267,12 @@ class Hunter
      * @param int $user
      * @param int $above
      * @param int $below
+     *
      * @return array
      */
     public function userRanklist($user, $above = 10, $below = 10)
     {
-        $rawUsers = $this->load("ranklist", array($user, $above, $below));
+        $rawUsers = $this->load('ranklist', array($user, $above, $below));
         $users = array();
 
         foreach ($rawUsers as $user) {
@@ -271,11 +287,12 @@ class Hunter
      *
      * @param int $pos
      * @param int $count
+     *
      * @return array
      */
     public function ranklist($pos = 1, $count = 10)
     {
-        $rawUsers = $this->load("rank", array($pos, $count));
+        $rawUsers = $this->load('rank', array($pos, $count));
         $users = array();
 
         foreach ($rawUsers as $user) {
@@ -290,6 +307,7 @@ class Hunter
      *
      * @param string    $node
      * @param array|int $arguments
+     *
      * @return mixed
      */
     private function load($node, $arguments = array())
@@ -298,14 +316,14 @@ class Hunter
             $arguments = array($arguments);
         }
         if (empty($arguments)) {
-            $response = file_get_contents($this->location . $node);
+            $response = file_get_contents($this->source . $node);
         } else {
             foreach ($arguments as &$argument) {
                 if (is_array($argument)) {
-                    $argument = implode(",", $argument);
+                    $argument = implode(',', $argument);
                 }
             }
-            $response = file_get_contents($this->location . $node . "/" . implode("/", $arguments));
+            $response = file_get_contents($this->source . $node . '/' . implode('/', $arguments));
         }
 
         return json_decode($response, true);

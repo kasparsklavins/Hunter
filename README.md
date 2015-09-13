@@ -39,7 +39,7 @@ All data is returned as an associated array.
 * `number` Problem number
 * `title` Problem title
 * `dacu` Number of distinct accepted users
-* `bestRuntime` Best runtime of an _Accepted Submission_
+* `bestRuntime` Best runtime in milliseconds of an _Accepted Submission_
 * `verdicts` An array given verdicts
     * `Hunter\Status::NO_VERDICT` Number of _No Verdict Given_ (can be ignored)
     * `Hunter\Status::SUBMISSION_ERROR` Number of _Submission Error_
@@ -55,7 +55,11 @@ All data is returned as an associated array.
     * `Hunter\Status::PRESENTATION_ERROR` Number of _Presentation Error_
     * `Hunter\Status::ACCEPTED` Number of _Accepted_
 * `limit` Problem runtime limit in milliseconds
-* `status` Problem Status (0 = unavailable, 1 = normal, 2 = special judge)
+* `status` Problem Status
+   * `Hunter\Status::UNAVAILABLE` Unavailable
+   * `Hunter\Status::Normal` Normal
+   * `Hunter\Status::SPECIAL_JUDGE` A special judging program is used.
+* `rejudged` Last time _(unix timestamp)_ the problem was rejudged, `null` if never.
 
 ##Submission format
 * `id` Submission`s ID
@@ -182,4 +186,16 @@ Global ranklist, starteing from `$rank` to `$rank+$count`
 ```PHP
 $hunter = new Hunter\Hunter();
 var_dump($hunter->ranklist(1, 100));
+```
+#setSource(string $source)
+Change the source of API data. The default is _http://uhunt.felix-halim.net/api/_, another valid source is _http://icpcarchive.ecs.baylor.edu/uhunt/api/_. But you can switch to any source that has the same data format.
+```PHP
+$hunter = new Hunter\Hunter();
+var_dump($hunter->setSource('http://icpcarchive.ecs.baylor.edu/uhunt/api/'));
+```
+#getSource()
+Returns the current used API source.
+```PHP
+$hunter = new Hunter\Hunter();
+var_dump($hunter->getSource());
 ```
