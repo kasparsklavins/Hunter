@@ -2,7 +2,7 @@
 
 namespace Hunter;
 
-class Hunter
+class Hunter implements HunterInterface
 {
     /**
      * Source of the API data
@@ -211,10 +211,10 @@ class Hunter
      */
     public function userProblemSubmissions($users, $problems, $min = 0, $type = 'id')
     {
-        if (is_array($users) === false) {
+        if (!is_array($users)) {
             $users = array($users);
         }
-        if (is_array($problems) === false) {
+        if (!is_array($problems)) {
             $problems = array($problems);
         }
 
@@ -223,6 +223,7 @@ class Hunter
         } else {
             $rawSubmissions = $this->load('subs-nums', array($users, $problems, $min));
         }
+
         $users = array();
 
         foreach ($rawSubmissions as $id => $user) {
@@ -310,7 +311,7 @@ class Hunter
      *
      * @return mixed
      */
-    private function load($node, $arguments = array())
+    protected function load($node, $arguments = array())
     {
         if (is_array($arguments) === false) {
             $arguments = array($arguments);
