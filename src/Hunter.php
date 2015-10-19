@@ -45,7 +45,7 @@ class Hunter implements HunterInterface
     {
         $id = $this->load('uname2uid', $username);
 
-        return ($id === 0) ? null : (int)$id;
+        return ($id === 0) ? null : (int) $id;
     }
 
     /**
