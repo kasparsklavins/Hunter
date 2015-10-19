@@ -1,3 +1,6 @@
+[![Build Status](https://scrutinizer-ci.com/g/kasparsklavins/Hunter/badges/build.png?b=master)](https://scrutinizer-ci.com/g/kasparsklavins/Hunter/build-status/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kasparsklavins/Hunter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kasparsklavins/Hunter/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/kasparsklavins/Hunter/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/kasparsklavins/Hunter/?branch=master)
 #Introduction
 Hunter is an easy to use [uHunt](http://uhunt.felix-halim.net/api) wrapper to receive information from [UVa's online judge](http://uva.onlinejudge.org/).
 
