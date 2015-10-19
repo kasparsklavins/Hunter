@@ -15,8 +15,9 @@ class Hunter implements HunterInterface
      * Sets the source of API data
      *
      * @param string $source
+     * @param bool   $ssl
      */
-    public function setSource($source)
+    public function setSource($source, $ssl = false)
     {
         if (substr($source, -1) != '/') {
             $source .= '/';
