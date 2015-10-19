@@ -1,6 +1,8 @@
 <?php
 
-use Hunter\Hunter;
+namespace Hunter;
+
+use PHPUnit_Framework_TestCase;
 
 class HunterTest extends PHPUnit_Framework_TestCase
 {
