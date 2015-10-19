@@ -27,7 +27,10 @@
             "src/helpers.php"
         ],
         "psr-4": {
-          "Hunter\\": "src/"
+            "Hunter\\": "src/"
+        },
+        "psr-0": {
+            "Hunter\\Tests\\": "tests/"
         }
     }
 }
