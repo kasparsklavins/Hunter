@@ -199,7 +199,7 @@ Change the source of API data. The default is _http://uhunt.felix-halim.net/api/
 $hunter = new Hunter\Hunter();
 var_dump($hunter->setSource('http://icpcarchive.ecs.baylor.edu/uhunt/api/'));
 ```
-#getSource()
+## getSource()
 Returns the current used API source.
 ```PHP
 $hunter = new Hunter\Hunter();
