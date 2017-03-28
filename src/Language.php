@@ -9,4 +9,5 @@ class Language
     const CPLUSPLUS   = 3;
     const PASCAL      = 4;
     const CPLUSPLUS11 = 5;
+    const PYTHON      = 6;
 }

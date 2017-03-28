@@ -90,6 +90,7 @@ All data is returned as an associated array.
     * `Hunter\Language::CPLUSPLUS` C++
     * `Hunter\Language::PASCAL` Pascal
     * `Hunter\Language::CPLUSPLUS11` C++11
+    * `Hunter\Language::PYTHON` Python
 * `runtime` Runtime in milliseconds
 * `rank` Submission rank, compared to all
 * `time` Submission unix timestamp
